@@ -349,7 +349,9 @@ class Bash
 	 */
 	public function removeFolder($folder = null)
 	{
-		return $this->run('rm -rf '.$this->rocketeer->getFolder($folder));
+		$sudo = $this->rocketeer->getOption('remote.permissions.sudo') ? 'sudo ' : '';
+
+		return $this->run($sudo.'rm -rf '.$this->rocketeer->getFolder($folder));
 	}
 
 	////////////////////////////////////////////////////////////////////
