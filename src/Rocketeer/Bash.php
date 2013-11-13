@@ -265,20 +265,24 @@ class Bash
 	 *
 	 * @return string
 	 */
-	public function symlink($folder, $symlink)
+	public function symlink($folder, $symlink, $sudo = false)
 	{
 		if (!$this->fileExists($folder)) {
 			if (!$this->fileExists($symlink)) {
 				return false;
 			}
 
-			$this->move($symlink, $folder);
+			$this->move($symlink, $folder, $sudo);
 		}
 
 		// Remove existing symlink
 		$this->removeFolder($symlink);
 
-		return $this->run(sprintf('ln -s %s %s', $folder, $symlink));
+		if ($sudo) {
+			$sudo = 'sudo ';
+		}
+
+		return $this->run(sprintf($sudo.'ln -s %s %s', $folder, $symlink));
 	}
 
 	/**
@@ -289,14 +293,18 @@ class Bash
 	 *
 	 * @return string
 	 */
-	public function move($origin, $destination)
+	public function move($origin, $destination, $sudo = false)
 	{
 		$folder = dirname($destination);
 		if (!$this->fileExists($folder)) {
 			$this->createFolder($folder, true);
 		}
 
-		return $this->run(sprintf('mv %s %s', $origin, $destination));
+		if ($sudo) {
+			$sudo = 'sudo ';
+		}
+
+		return $this->run(sprintf((string) $sudo.'mv %s %s', $origin, $destination));
 	}
 
 	/**

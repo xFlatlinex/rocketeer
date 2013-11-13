@@ -186,18 +186,21 @@ abstract class Task extends Bash
 	 */
 	public function share($file)
 	{
+		// Do we need to sudo?
+		$sudo = $this->rocketeer->getOption('remote.permissions.sudo');
+
 		// Get path to current file and shared file
 		$currentFile = $this->releasesManager->getCurrentReleasePath($file);
 		$sharedFile  = preg_replace('#releases/[0-9]+/#', 'shared/', $currentFile);
 
 		// If no instance of the shared file exists, use current one
 		if (!$this->fileExists($sharedFile)) {
-			$this->move($currentFile, $sharedFile);
+			$this->move($currentFile, $sharedFile, $sudo);
 		}
 
 		$this->command->comment('Sharing file '.$currentFile);
 
-		return $this->symlink($sharedFile, $currentFile);
+		return $this->symlink($sharedFile, $currentFile, $sudo);
 	}
 
 	/**
