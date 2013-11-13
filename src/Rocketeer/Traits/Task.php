@@ -217,19 +217,20 @@ abstract class Task extends Bash
 
 		// Get permissions options
 		$options = $this->rocketeer->getOption('remote.permissions');
+		$sudo    = array_get($options, 'sudo') ? 'sudo' : '';
 		$chmod   = array_get($options, 'permissions');
 		$user    = array_get($options, 'apache.user');
 		$group   = array_get($options, 'apache.group');
 
 		// Add chmod
 		if ($chmod) {
-			$commands[] = sprintf('chmod -R %s %s', $chmod, $folder);
-			$commands[] = sprintf('chmod -R g+s %s', $folder);
+			$commands[] = sprintf('%s chmod -R %s %s', $sudo, $chmod, $folder);
+			$commands[] = sprintf('%s chmod -R g+s %s', $sudo, $folder);
 		}
 
 		// And chown
 		if ($user and $group) {
-			$commands[] = sprintf('chown -R %s:%s %s', $user, $group, $folder);
+			$commands[] = sprintf('%s chown -R %s:%s %s', $sudo, $user, $group, $folder);
 		}
 
 		// Cancel if setting of permissions is not configured

@@ -80,6 +80,10 @@
 		),
 
 		'permissions' => array(
+		    // When set to true, the commands to change permissions will
+		    // run with sudom, so make sure your remote server user can run
+		    // sudo without prompting for password
+            'sudo' => false,
 
 			// The permissions to CHMOD folders to
 			// Change to null to leave the folders untouched
